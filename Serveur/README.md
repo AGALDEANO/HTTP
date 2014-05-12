@@ -1,1 +1,1 @@
-Voici le projet serveur
+Voici le package serveur
