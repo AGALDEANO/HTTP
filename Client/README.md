@@ -1,1 +1,1 @@
-Voici le projet client
+Voici le package client
