@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  *
  * @author 4lexandre
  */
-public class Serveur implements Runnable {
+public class Serveur extends Thread {
 
     private final int port;
     private ServerSocket SServeur;
@@ -25,8 +25,11 @@ public class Serveur implements Runnable {
     private InputStream IS;
     private final int size = 1024;
     private final byte[] buffer = new byte[size];
+    private byte[] response;
     private final ArrayList<byte[]> inputBuffer = new ArrayList<>();
     private byte[] request;
+    private String[] requestParts;
+    private byte[] file;
 
     public Serveur(int _port) {
         port = _port;
@@ -53,24 +56,15 @@ public class Serveur implements Runnable {
         try {
             SClient = SServeur.accept();
             IS = SClient.getInputStream();
-            int lastSize = 0, i, j;
-            boolean loop = true;
-            while (loop) {
-                lastSize = IS.read(buffer);
-                if (lastSize < size) {
-                    loop = false;
-                } else {
-                    inputBuffer.add(buffer);
-                }
+            request = Web.inputToRequest(IS);
+            requestParts = Web.requestToString(request);
+            if(requestParts.length<3)
+            {
+                response = Web.createErrorResponse(400);
             }
-            request = new byte[size * inputBuffer.size() + lastSize];
-            for (i = 0; i < inputBuffer.size(); i++) {
-                for (j = 0; j < size; j++) {
-                    request[i * inputBuffer.size() + j] = inputBuffer.get(i)[j];
-                }
-            }
-            for (j = 0; j < lastSize; j++) {
-                request[i * inputBuffer.size() + j] = buffer[j];
+            else if("GET".equals(requestParts[0]))
+            {
+                response = Web.get(requestParts);
             }
         } catch (IOException ex) {
             Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
