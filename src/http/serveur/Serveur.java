@@ -6,7 +6,6 @@
 package http.serveur;
 
 import java.io.*;
-import java.lang.*;
 import java.net.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -54,22 +53,39 @@ public class Serveur extends Thread {
     @Override
     public void run() {
         try {
+            boolean fin = false;
             SClient = SServeur.accept();
-            IS = SClient.getInputStream();
-            request = Web.inputToRequest(IS);
-            requestParts = Web.requestToString(request);
-            if(requestParts.length<3)
-            {
-                response = Web.createErrorResponse(400);
-            }
-            else if("GET".equals(requestParts[0]))
-            {
-                response = Web.get(requestParts);
-            }
+            do {
+                try {
+
+                    IS = SClient.getInputStream();
+                    OS = SClient.getOutputStream();
+
+                    System.out.println();
+                    request = Web.inputToRequest(IS);
+
+                    requestParts = Web.requestToString(request);
+                    if (requestParts.length < 2) {
+                        response = Web.createErrorResponse(400);
+                    } else if ("GET".equals(requestParts[0])) {
+                        response = Web.get(requestParts);
+                    }
+                    System.out.println("============================================================");
+                    for (int i = 0; i < response.length; i++) {
+                        System.out.print((char) response[i]);
+                    }
+                    OS.write(response);
+                    OS.flush();
+                } catch (IOException ex) {
+                    Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
+                    fin = true;
+                }
+            } while (!fin);
+            SClient.close();
+            SServeur.close();
         } catch (IOException ex) {
             Logger.getLogger(Serveur.class.getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
 }

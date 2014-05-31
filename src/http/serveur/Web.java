@@ -23,9 +23,17 @@ import java.util.Locale;
 public class Web {
 
     private static String error(int nb) {
-        String message = "";
-        message += "<h1>ERROR " + nb + "</h1>";
-        message += "\n<p>"+getNameCode(nb)+"</p>";
+        String message = "<!DOCTYPE HTML>\n"
+                + "<html>\n"
+                + "<head>\n"
+                + "<title>";
+        message += "Error " + nb + " : " + getNameCode(nb) + "</title>\n"
+                + "</head>\n"
+                + "<body>";
+        message += "<h1>Error " + nb + " : " + getNameCode(nb) + "</h1>";
+        message += "<a href=\"/\">Back to index</a></p>\n"
+                + "<hr>\n"
+                + "<address>Server made by Ga&euml;l Ferjani and Alexandre Gald&eacute;ano</address>";
         return message;
     }
 
@@ -83,7 +91,7 @@ public class Web {
 
         return str.getBytes();
     }
-    
+
     public static byte[] createResponse(int code, byte[] body) {
         return createResponse(code, byteToString(body));
     }
@@ -128,9 +136,9 @@ public class Web {
 
     public static String getFileNameFromRequest(String[] request) {
         String filename = "";
-        if(request[1].equals("/")) filename = "index.html";
-        else
-        {
+        if (request[1].equals("/")) {
+            filename = "index.html";
+        } else {
             String[] path = request[1].split("/", 2);
             filename += path[1];
         }
@@ -140,7 +148,7 @@ public class Web {
     public static String[] requestToString(byte[] request) {
         String strRequest = "";
         for (int i = 0; i < request.length; i++) {
-            strRequest += request[i];
+            strRequest += (char) request[i];
         }
         return strRequest.split(" ");
 
@@ -152,7 +160,9 @@ public class Web {
             return createResponse(400, error(400).getBytes());
         } else {
             byte[] getFileFromRequest = getFile(filename);
-            if(getFileFromRequest == null) return createResponse(404, filename);
+            if (getFileFromRequest == null) {
+                return createResponse(404, "");
+            }
             return createResponse(200, getFileFromRequest);
         }
     }
@@ -184,7 +194,7 @@ public class Web {
             }
         }
         for (j = 0; j < lastSize; j++) {
-            request[i * inputBuffer.size() + j] = buffer[j];
+            request[size * inputBuffer.size() + j] = buffer[j];
         }
         return request;
     }
