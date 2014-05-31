@@ -132,7 +132,7 @@ public class Web {
         else
         {
             String[] path = request[1].split("/", 2);
-            filename += "./"+path[1];
+            filename += path[1];
         }
         return filename;
     }

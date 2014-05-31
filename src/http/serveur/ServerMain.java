@@ -21,7 +21,7 @@ public class ServerMain {
         response = Web.byteToString(Web.get(request.split(" ")));
         System.out.println("\n"+request+"\n");
         System.out.println(response);
-        request = "GET 127.0.0.1/src/html/Main.java";
+        request = "GET 127.0.0.1/src\\html\\Main.java";
         response = Web.byteToString(Web.get(request.split(" ")));
         System.out.println("\n"+request+"\n");
         System.out.println(response);
