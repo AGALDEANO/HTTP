@@ -21,7 +21,7 @@ import java.util.Locale;
  * @author 4lexandre
  */
 public class Web {
-
+    public static String path = "src/http/";
     private static String error(int nb) {
         String message = "<!DOCTYPE HTML>\n"
                 + "<html>\n"
@@ -135,9 +135,9 @@ public class Web {
     }
 
     public static String getFileNameFromRequest(String[] request) {
-        String filename = "";
+        String filename = path;
         if (request[1].equals("/")) {
-            filename = "index.html";
+            filename += "index.html";
         } else {
             String[] path = request[1].split("/", 2);
             filename += path[1];
