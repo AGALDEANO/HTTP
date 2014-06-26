@@ -13,17 +13,7 @@ package http.serveur;
 public class ServerMain {
     public static void main(String[] args)
     {
-        String request = "GET /dfsdgfqf.html";
-        String response = Web.byteToString(Web.get(request.split(" ")));
-        System.out.println("\n"+request+"\n");
-        System.out.println(response);
-        request = "GET 127.0.0.1/index.html";
-        response = Web.byteToString(Web.get(request.split(" ")));
-        System.out.println("\n"+request+"\n");
-        System.out.println(response);
-        request = "GET 127.0.0.1/src/html/Main.java";
-        response = Web.byteToString(Web.get(request.split(" ")));
-        System.out.println("\n"+request+"\n");
-        System.out.println(response);
+        Serveur serv = new Serveur();
+        serv.start();
     }
 }
